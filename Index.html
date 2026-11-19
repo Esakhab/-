@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Camera Prank 😂</title>
+
+<style>
+body {
+  background: #10101c;
+  color: white;
+  font-family: Arial;
+  text-align: center;
+  padding: 25px;
+}
+h1 {
+  color: #00ffae;
+}
+button {
+  background: #00ffae;
+  border: none;
+  padding: 15px 25px;
+  border-radius: 12px;
+  font-size: 17px;
+  margin: 10px;
+  cursor: pointer;
+}
+video {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 15px;
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>😂 Camera Prank</h1>
+<p>Ready for a surprise?</p>
+
+<button onclick="startCamera()">Open Camera 📸</button>
+
+<video id="camera" autoplay playsinline hidden></video>
+
+<br>
+
+<button id="capture" onclick="takePhoto()" hidden>
+Take Photo 📸
+</button>
+
+<canvas id="canvas" hidden></canvas>
+
+<p id="message"></p>
+
+<script>
+let stream;
+
+async function startCamera() {
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "user" }
+    });
+
+    const video = document.getElementById("camera");
+
+    video.srcObject = stream;
+    video.hidden = false;
+
+    await video.play();
+
+    document.getElementById("capture").hidden = false;
+
+    document.getElementById("message").textContent =
+      "Camera ready! Take your photo 😂";
+
+  } catch (error) {
+    alert("Camera permission was not granted.");
+  }
+}
+
+function takePhoto() {
+  const video = document.getElementById("camera");
+  const canvas = document.getElementById("canvas");
+
+  if (!video.videoWidth) {
+    alert("Camera is not ready yet!");
+    return;
+  }
+
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+
+  canvas.getContext("2d").drawImage(
+    video, 0, 0, canvas.width, canvas.height
+  );
+
+  const link = document.createElement("a");
+  link.download = "my-photo.png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+
+  document.getElementById("message").textContent =
+    "Surprise!  Photo taken!";
+}
+
+</script>
+</body>
+</html>
